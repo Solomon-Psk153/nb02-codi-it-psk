@@ -1,0 +1,63 @@
+{
+  "name": "codi-it",
+  "version": "1.0.0",
+  "description": "🛍️ 판매자와 구매자를 위한 패션 커머스의 모든 것! 상품 등록부터 실시간 알림, 판매 분석까지 한 번에 관리해보세요. 구매자와 판매자를 위한 맞춤형 기능을 제공하며, 안정적인 인증 시스템과 다양한 필터링∙정렬 기능, 그리고 상세한 대시보드까지 지원하는 스마트한 쇼핑몰 운영 솔루션입니다. 지금 바로 더 편리하고 똑똑한 패션 커머스를 시작해보세요. 👗🧾",
+  "scripts": {
+    "dev": "nodemon --watch src --exec ts-node src/bin/www.bin.ts",
+    "create:db": "ts-node src/bin/create-db.bin.ts",
+    "migrate:make": "node -r ts-node/register ./node_modules/.bin/knex migrate:make --knexfile ./knex/config/knexfile.ts",
+    "migrate:latest": "node -r ts-node/register ./node_modules/.bin/knex migrate:latest --knexfile ./knex/config/knexfile.ts",
+    "migrate:rollback": "node -r ts-node/register ./node_modules/.bin/knex migrate:rollback --knexfile ./knex/config/knexfile.ts",
+    "migrate:up": "node -r ts-node/register ./node_modules/.bin/knex migrate:up --knexfile ./knex/config/knexfile.ts",
+    "migrate:down": "node -r ts-node/register ./node_modules/.bin/knex migrate:down --knexfile ./knex/config/knexfile.ts",
+    "migrate:list": "node -r ts-node/register ./node_modules/.bin/knex migrate:list --knexfile ./knex/config/knexfile.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Solomon-Psk153/nb02-codi-it-psk.git"
+  },
+  "keywords": [],
+  "author": "Solomon-Psk153",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Solomon-Psk153/nb02-codi-it-psk/issues"
+  },
+  "homepage": "https://github.com/Solomon-Psk153/nb02-codi-it-psk#readme",
+  "dependencies": {
+    "axios": "^1.12.2",
+    "bcrypt": "^6.0.0",
+    "c12": "^3.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "dotenv-cli": "^10.0.0",
+    "dotenv-expand": "^12.0.3",
+    "express": "^5.1.0",
+    "express-actuator": "^1.8.4",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "knex": "^3.1.0",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
+    "pg": "^8.16.3",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/express-actuator": "^1.8.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/morgan": "^1.9.10",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^24.5.1",
+    "@types/passport": "^1.0.17",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/passport-local": "^1.0.38",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}
