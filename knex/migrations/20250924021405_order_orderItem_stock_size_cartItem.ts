@@ -25,9 +25,9 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTableIfExists("cart_items");
-  await knex.schema.dropTableIfExists("size_info");
-  await knex.schema.dropTableIfExists("sizes");
   await knex.schema.dropTableIfExists("stocks");
+  await knex.schema.dropTableIfExists("sizes");
+  await knex.schema.dropTableIfExists("size_info");
   await knex.schema.dropTableIfExists("order_items");
   await knex.schema.dropTableIfExists("orders");
 }

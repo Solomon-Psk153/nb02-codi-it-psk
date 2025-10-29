@@ -17,8 +17,8 @@ export const createProductsTable = (t: Knex.CreateTableBuilder) => {
   t.timestamp("discount_end_time");
   t.integer("reviews_count").defaultTo(0);
   t.integer("sales");
-  t.integer("stock");
-  t.boolean("is_sold_out");
+  t.integer("stock").comment("내 스토어 등록 상품 조회에서 볼 수 있다.");
+  t.boolean("is_sold_out").comment("내 스토어 등록 상품 조회에서 볼 수 있다.");
   t.boolean("is_discount");
 
   t.foreign("category_id", "fkey_products_to_category")

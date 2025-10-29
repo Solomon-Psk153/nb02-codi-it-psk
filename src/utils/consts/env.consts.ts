@@ -1,13 +1,6 @@
-import { envVerify } from "../env.util";
+import config from "@_configs/index";
 
-// BASIC
-export const NODE_ENV = envVerify("NODE_ENV");
-export const PORT = envVerify("PORT");
-
-// DB
-export const PG_CONNECTION4CREATE = envVerify("PG_CONNECTION4CREATE");
-
-export const DB_NAME = envVerify("DB_NAME");
-export const PG_CONNECTION = envVerify("PG_CONNECTION");
-
-export const isNotProduction = NODE_ENV !== "high_production"
+export const jwtAccessSecret = config.env.secrets.jwtAccess;
+export const jwtRefreshSecret = config.env.secrets.jwtRefresh;
+export const cuidFingerPrint = config.env.secrets.cuidFingerPrint;
+export const cookieSecret = config.env.secrets.cookie;
