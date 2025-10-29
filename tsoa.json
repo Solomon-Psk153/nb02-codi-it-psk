@@ -1,0 +1,59 @@
+{
+  "entryFile": "./src/bin/www.bin.ts",
+  "controllerPathGlobs": [
+    "src/mvc/controllers/**/*.controller.ts"
+  ],
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@_IFs/*":["./src/types/interfaces/*"],
+      "@_types/*": ["./src/types/*"],
+      "@_utils/*": ["./src/utils/*"],
+      "@_repos/*": ["./src/mvc/repos/*"],
+      "@_srvs/*": ["./src/mvc/services/*"],
+      "@_ctls/*": ["./src/mvc/controllers/*"],
+      "@_errors/*": ["./src/utils/errors/*"],
+      "@_mws/*": ["./src/middlewares/*"],
+      "@_routes/*":["./src/mvc/routes/*"],
+      "@_di/*": ["./src/di/*"],
+      "@_configs/*": ["./configs/*"],
+      "@_validators/*": ["./validators/*"],
+      "@_envs/*": ["./envs/*"],
+      "@_app/*": ["./src/app/*"],
+      "@_knex/*": ["./knex/*"],
+      "@_consts/*": ["./src/utils/consts/*"]
+    }
+  },
+  "spec": {
+    "outputDirectory": "./src/mvc/routes",
+    "specVersion": 3,
+    "name": "Codi-it API",
+    "description": "backend Codi-it API Server",
+    "components": {
+      "securitySchemes": {
+        "jwt": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        },
+        "refresh": {
+          "type": "apiKey",
+          "name": "refreshToken",
+          "in": "cookie"
+        }
+      }
+    }
+  },
+  "routes": {
+    "routesDir": "./src/mvc/routes",
+    "routesFileName": "tsoa.route.ts",
+    "middleware": "express",
+    "basePath": "/api",
+    "authenticationModule": "./src/utils/expressAuthentication.tsoa.ts"
+  },
+  "ignore": [
+    "node_modules",
+    "test"
+  ]
+}

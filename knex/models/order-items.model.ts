@@ -5,8 +5,8 @@ export const createOrderItemsTable = (t: Knex.CreateTableBuilder) => {
   t.bigInteger("price").notNullable();
   t.integer("quantity").notNullable();
   t.string("product_id", 25).notNullable();
-  t.jsonb("product").notNullable();
-  t.jsonb("size").notNullable();
+  t.jsonb("product").notNullable().comment("주문 당시의 값들을 온전히 가지고 있어야 한다.");;
+  t.jsonb("size").notNullable().comment("주문 당시의 값들을 온전히 가지고 있어야 한다.");;
   t.boolean("is_reviewed").notNullable();
   t.string("order_id", 25).notNullable();
 

@@ -1,0 +1,21 @@
+### register 1
+POST http://{{$dotenv HOST_URL}}:{{$dotenv PORT}}/api/users
+Content-Type: application/json; charset=UTF-8
+
+{
+  "name": "tmp",
+  "email":"qwer@qwer.com",
+  "password": "asdfasdf",
+  "type":"BUYER"
+}
+
+### register 2
+POST http://{{$dotenv HOST_URL}}:{{$dotenv PORT}}/api/users
+Content-Type: application/json; charset=UTF-8
+
+{
+  "name": "tmp2",
+  "email":"qwer2@qwer.com",
+  "password": "asdfasdf",
+  "type":"BUYER"
+}

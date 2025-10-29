@@ -1,0 +1,27 @@
+### local login 1
+
+POST http://{{$dotenv HOST_URL}}:{{$dotenv PORT}}/api/auth/login
+Content-Type: application/json; charset=UTF-8
+
+{
+  "email": "test1234@asdf.com",
+  "password": "1234qwer"
+}
+
+### local login 2
+POST http://{{$dotenv HOST_URL}}:{{$dotenv PORT}}/api/auth/login
+Content-Type: application/json; charset=UTF-8
+
+{
+  "email":"qwer@qwer.com",
+  "password": "asdfasdf"
+}
+
+### local login 3
+POST http://{{$dotenv HOST_URL}}:{{$dotenv PORT}}/api/auth/login
+Content-Type: application/json; charset=UTF-8
+
+{
+  "email":"qwer2@qwer.com",
+  "password": "asdfasdf"
+}
