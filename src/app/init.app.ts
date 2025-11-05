@@ -6,18 +6,21 @@ import actuator from 'express-actuator';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+import swaggerUi from 'swagger-ui-express';
 import { errorHandler } from '@_mws/errorHandler';
 import { RegisterRoutes } from "@_routes/tsoa.route"; // tsoa가 생성한 파일
 
-import { asValue, type AwilixContainer } from "awilix";
-import { cookieSecret } from "@_consts/env.consts";
+import * as swaggerDocument from '@_routes/swagger.json';
 
-export async function createApp({container} : {container: AwilixContainer}) {
+import { asFunction, type AwilixContainer } from "awilix";
+import { cookieSecret } from "@_consts/env.consts";
+import { RequestUserConfigType } from "@_types/config.type";
+
+export async function createApp({ container }: { container: AwilixContainer }) {
   const app = express();
 
   app.use((req, _res, next) => {
     req.scope = container.createScope();
-    req.scope.register({currentUser: asValue(req.user)});
     next();
   });
 
@@ -30,6 +33,8 @@ export async function createApp({container} : {container: AwilixContainer}) {
   app.use(helmet());
 
   RegisterRoutes(app);
+
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   app.use(((_req, _res, next) => {
     next(createError(404));

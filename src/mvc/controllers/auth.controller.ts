@@ -1,27 +1,44 @@
-import { Route, Controller, Tags, Post, Body, SuccessResponse, Response, Example, Request } from "@tsoa/runtime";
+import { Route, Controller, Tags, Post, Body, SuccessResponse, Response, Example, Request, Security } from "@tsoa/runtime";
 import { generateAccessToken, generateRefreshToken } from "@_utils/token.util";
 import { omit } from "@_utils/app.util";
-import { cookieConfig } from "@_consts/app.consts";
+import { appLogLevel, cookieConfig } from "@_consts/app.consts";
 
-import type { PostLoginRequestBodyObjectType, PostLoginResponseSuccessObjectType } from "@_types/auth.type";
+import type { PostGetAccessWithRefreshSuccessObjectTYpe, PostLoginRequestBodyObjectType, PostLoginResponseSuccessObjectType } from "@_types/auth.type";
 import type { ErrorResponseObjectType } from "@_types/error.type";
 import type { Request as ExpressRequest } from "express";
 import type { IAuthSrv } from "@_IFs/services/auth.interface";
 import type { CookieSameSiteType } from "@_types/app.type";
 import { RESOLVER } from "awilix";
 import { userLoginSchema } from "@_validators/requests/auth.validator";
+import { RequestUserConfigType } from "@_types/config.type";
 
 @Route("auth")
 @Tags("Auth")
 export class AuthController extends Controller {
 
-  constructor(){
+  constructor() {
     super();
   }
 
   @Post("login")
   @SuccessResponse(201, "login success", "application/json")
-  @Example<PostLoginRequestBodyObjectType>({ email: "buyer@codiit.com", password: "test1234" })
+  @Example<PostLoginResponseSuccessObjectType>({
+    user: {
+      "id": "CUID",
+      "name": "김유저",
+      "email": "email@example.com",
+      "type": "BUYER",
+      "points": 999,
+      "grade": {
+        "name": "green",
+        "id": "grade_green",
+        "rate": 5,
+        "minAmount": 1000000
+      },
+      "image": "https://sprint-be-project.s3.ap-northeast-2.amazonaws.com/codiit/1749477485230-user_default.png"
+    },
+    accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  })
   @Response<ErrorResponseObjectType>(400, "Bad Request", { status: 400, message: "잘못된 요청입니다.", error: "Bad Request" }, "application/json")
   @Response<ErrorResponseObjectType>(401, "Unauthorized", { status: 401, message: "이메일 또는 비밀번호가 올바르지 않습니다.", error: "Unauthorized" }, "application/json")
   @Response<ErrorResponseObjectType>(404, "Not Found", { status: 404, message: "요청한 리소스를 찾을 수 없습니다.", error: "Not Found" }, "application/json")
@@ -33,8 +50,13 @@ export class AuthController extends Controller {
     userLoginSchema.parse(body);
     const registeredUserObj = await authService.login(body);
 
-    req.res?.cookie("refreshToken", generateRefreshToken(registeredUserObj.id, [registeredUserObj.type]), {
-      path:"/auth/login",
+    const newRefreshToken = generateRefreshToken({
+      sub: registeredUserObj.id,
+      scopes: ["SELLER", "BUYER"]
+    });
+
+    req.res?.cookie("refreshToken", newRefreshToken, {
+      path: "/auth/login",
       signed: cookieConfig.signed,
       httpOnly: cookieConfig.httpOnly,
       secure: cookieConfig.secure,
@@ -42,9 +64,56 @@ export class AuthController extends Controller {
       maxAge: cookieConfig.maxAge
     });
 
+    if (appLogLevel === 'debug') console.log("newRefreshToken: ", newRefreshToken);
+
     return {
       user: omit(registeredUserObj, "password"),
-      accessToken: generateAccessToken(registeredUserObj.id, [registeredUserObj.type])
+      accessToken: generateAccessToken({
+        sub: registeredUserObj.id,
+        scopes: [registeredUserObj.type]
+      })
+    };
+  }
+
+  @Post("refresh")
+  @Security("refresh", ["SELLER", "BUYER"])
+  @SuccessResponse(200, "accessToken regen Success", "application/json")
+  @Example<PostGetAccessWithRefreshSuccessObjectTYpe>({
+    accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  })
+  @Response<ErrorResponseObjectType>(400, "Bad Request", { status: 400, message: "잘못된 요청입니다.", error: "Bad Request" }, "application/json")
+  @Response<ErrorResponseObjectType>(401, "Unauthorized", { status: 401, message: "이메일 또는 비밀번호가 올바르지 않습니다.", error: "Unauthorized" }, "application/json")
+  public async getAccessTokenWithRefreshToken(
+    @Request() req: ExpressRequest
+  ): Promise<PostGetAccessWithRefreshSuccessObjectTYpe> {
+    const currentUser = req.scope.resolve<RequestUserConfigType>("currentUser");
+
+    if(appLogLevel === 'debug') {
+      console.log("currentUser:", currentUser);
+      console.log("req.user:", req.user);
+    }
+
+    const newRefreshToken = generateRefreshToken({
+      sub: currentUser.id,
+      scopes: ["SELLER", "BUYER"]
+    });
+
+    req.res?.cookie("refreshToken", newRefreshToken, {
+      path: "/auth/login",
+      signed: cookieConfig.signed,
+      httpOnly: cookieConfig.httpOnly,
+      secure: cookieConfig.secure,
+      sameSite: cookieConfig.sameSite as CookieSameSiteType,
+      maxAge: cookieConfig.maxAge
+    });
+
+    if (appLogLevel === 'debug') console.log("newRefreshToken: ", newRefreshToken);
+
+    return {
+      accessToken: generateAccessToken({
+        sub: currentUser.id,
+        scopes: [currentUser.type]
+      })
     };
   }
 

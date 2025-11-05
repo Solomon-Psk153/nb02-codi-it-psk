@@ -1,5 +1,6 @@
-import type { PostUserRegisterRequestObjectType, UserRestructedDBObjectType } from "@_types/user.type";
+import type { PostFindUserInfoParamType, PostRegisterRequestObjectType, UserRestructedDBObjectType } from "@_types/user.type";
 
 export interface IUserSrv {
-  register({name, email, password, type}: PostUserRegisterRequestObjectType): Promise<UserRestructedDBObjectType>
+  register({name, email, password, type}: PostRegisterRequestObjectType): Promise<UserRestructedDBObjectType>;
+  findUserInfo({id, type}: PostFindUserInfoParamType): Promise<UserRestructedDBObjectType>;
 }

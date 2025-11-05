@@ -12,7 +12,13 @@ import { envSchema } from "@_configs/schemas/env.schema";
 import { appSchema } from '@_configs/schemas/app.schema';
 import { pgSchema } from '@_configs/schemas/pg.schema';
 
-dotenvExpand.expand(dotenv.config({ path: path.resolve(__dirname, "../envs/.env") }));
+const NODE_ENV = process.env.NODE_ENV;
+
+if(NODE_ENV){
+  dotenvExpand.expand(dotenv.config({ path: path.resolve(__dirname, "../envs/.env") }));
+} else {
+  throw new Error("NODE_ENV have no vaule!");
+}
 
 const parsedEnv = envSchema.safeParse(process.env);
 if (!parsedEnv.success) {
@@ -25,7 +31,6 @@ if (!parsedEnv.success) {
 const passedEnv = parsedEnv.data;
 
 // 3) env, 환경에 따른 설정을 병합(merge)한다.
-const NODE_ENV = passedEnv.NODE_ENV;
 const nodeEnvSpecificAppCfg = NODE_ENV === 'production' ? prodAppCfg : (NODE_ENV === 'test' ? testAppCfg : devAppCfg);
 
 const appEnv = {

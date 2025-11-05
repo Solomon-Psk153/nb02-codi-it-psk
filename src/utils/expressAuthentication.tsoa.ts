@@ -5,6 +5,8 @@ import { UserDBObjectType } from "@_types/knex.type";
 import { jwtAccessSecret, jwtRefreshSecret } from "@_consts/env.consts";
 import { getContainer } from "@_di/container.di";
 import type { Knex } from "knex";
+import { appLogLevel } from "./consts/app.consts";
+import { asValue } from "awilix";
 
 // token을 여러 위치에서 찾기(헤더, 바디, 쿼리, 쿠키 가능)
 const searchTokenWithName = (req: Request, name: string) => {
@@ -34,9 +36,11 @@ const searchTokenWithSecurityName = (req: Request, secName: string):string => {
   if(!token){
     throw new Error(`No ${secName}token provided`);
   }
+
+  if (appLogLevel === 'debug') console.log(`${secName}Token:`, token);
   
   return token;
-}
+};
 
 const selectTokenSecret4HS = (secName: string) => {
   switch (secName) {
@@ -49,34 +53,52 @@ const selectTokenSecret4HS = (secName: string) => {
   }
 }
 
+// scopes = roles = seller or buyer
 export const expressAuthentication = async (req: Request, securityName: string, scopes?: string[]) => {
   const token = searchTokenWithSecurityName(req, securityName);
   try {
     const payload = jwt.verify(token, selectTokenSecret4HS(securityName), { algorithms: ["HS256"] });
     
-    
-    if (scopes && scopes.length > 0) {
+    if (typeof payload !== "object" || Object.is(payload, null)) {
+      throw new Error("Invalid payload");
+    }
 
-      const tokenScopes: string[] = (payload as any).scopes || [];
-      const ok = scopes.every(sc => tokenScopes.includes(sc));
+    // const tokenRoles: string[] = Array.isArray(payload.roles) ? payload.roles : [];
+    const tokenScopes: string[] = Array.isArray(payload.scopes) ? payload.scopes : [];
+    
+    if(appLogLevel === 'debug'){
+      console.log("tokenScopes:", tokenScopes);
+      console.log("scopes:", scopes);
+    }
+
+    if (scopes && scopes.length > 0) {
+      
+      const ok = scopes.every((scope) => tokenScopes.includes(scope));
 
       if (!ok) throw new Error("Insufficient scope");
-    } else throw new Error("scope not defined");
 
-    if (typeof payload !== "object" || Object.is(payload, null)) throw new Error("Invalid payload");
-    const sub = (payload as any).sub;
-    if (typeof sub !== "string") throw new Error("Invalid subject claim");
+    } else {
+      throw new Error("scope not defined");
+    }
 
-    const pg = getContainer().resolve<Knex>("db");
-    const user = await pg.select().from("users").where({ id: sub }).first<UserDBObjectType | undefined>();
-    console.log(user);
+    const userId = payload.sub;
+    if (typeof userId !== "string") throw new Error("Invalid subject claim");
+
+    const db = getContainer().resolve<Knex>("db");
+    const user = await db.select("*").from("users").where({ id: userId }).first<UserDBObjectType | undefined>();
+    
+    if(appLogLevel === 'debug') console.log("user: ", user);
 
     if (user != null) {
+
+      // if(tokenRoles.includes(user.type)) throw new Error("Not Same Role!");
+
       // safe user property
       req.user = {
         id: user.id,
         type: user.type
       };
+      req.scope.register({ currentUser: asValue(req.user) });
     } else {
       throw new Error("user's not found");
     }

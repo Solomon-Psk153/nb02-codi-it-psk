@@ -18,7 +18,7 @@
       "@_routes/*":["./src/mvc/routes/*"],
       "@_di/*": ["./src/di/*"],
       "@_configs/*": ["./configs/*"],
-      "@_validators/*": ["./validators/*"],
+      "@_validators/*": ["./src/validators/*"],
       "@_envs/*": ["./envs/*"],
       "@_app/*": ["./src/app/*"],
       "@_knex/*": ["./knex/*"],
