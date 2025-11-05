@@ -25,3 +25,8 @@ Content-Type: application/json; charset=UTF-8
   "email":"qwer2@qwer.com",
   "password": "asdfasdf"
 }
+
+### get Access with Refresh
+POST http://{{$dotenv HOST_URL}}:{{$dotenv PORT}}/api/auth/refresh
+Content-Type: application/json; charset=UTF-8
+Cookie: refreshToken={{$dotenv REFRESH_TOKEN_TEST}}

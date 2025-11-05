@@ -1,0 +1,606 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"Pick_UserDBObjectType.Exclude_keyofUserDBObjectType.grade_id-or-image_url__": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"points": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string"
+					},
+					"updatedAt": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"email",
+					"password",
+					"type",
+					"points",
+					"createdAt",
+					"updatedAt"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_UserDBObjectType.grade_id-or-image_url_": {
+				"$ref": "#/components/schemas/Pick_UserDBObjectType.Exclude_keyofUserDBObjectType.grade_id-or-image_url__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"Pick_GradeDBObjectType.Exclude_keyofGradeDBObjectType.min_amount__": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"rate": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"rate"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_GradeDBObjectType.min_amount_": {
+				"$ref": "#/components/schemas/Pick_GradeDBObjectType.Exclude_keyofGradeDBObjectType.min_amount__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"GradeRestructedDBObjectType": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/Omit_GradeDBObjectType.min_amount_"
+					},
+					{
+						"properties": {
+							"minAmount": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"minAmount"
+						],
+						"type": "object"
+					}
+				],
+				"description": "```json\n{\n  id: string;\n  name: string;\n  rate: number;\n  minAmount: number;\n};\n ```"
+			},
+			"UserRestructedDBObjectType": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/Omit_UserDBObjectType.grade_id-or-image_url_"
+					},
+					{
+						"properties": {
+							"grade": {
+								"$ref": "#/components/schemas/GradeRestructedDBObjectType"
+							},
+							"image": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"grade"
+						],
+						"type": "object"
+					}
+				],
+				"description": "```json\n{\n  id: Cuid;\n  name: string;\n  email: string;\n  password: string;\n  type: string;\n  points: number;\n  createdAt: string;\n  updatedAt: string;\n  grade: {\n    id: string;\n    name: string;\n    rate: number;\n    minAmount: number;\n  };\n  image: string;\n}\n```"
+			},
+			"PostRegisterSuccessObjectType": {
+				"$ref": "#/components/schemas/UserRestructedDBObjectType"
+			},
+			"ErrorResponseObjectType": {
+				"properties": {
+					"error": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"status": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"error",
+					"message",
+					"status"
+				],
+				"type": "object",
+				"description": "서버가 Error를 줄 때 json 구조"
+			},
+			"PostRegisterRequestObjectType": {
+				"properties": {
+					"type": {
+						"type": "string",
+						"enum": [
+							"SELLER",
+							"BUYER"
+						]
+					},
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"type",
+					"password",
+					"email",
+					"name"
+				],
+				"type": "object",
+				"description": "{\n  name: string;\n  email: string;\n  password: string;\n  type: \"SELLER\" | \"BUYER\";\n}"
+			},
+			"PostFindUserInfoSuccessObjectType": {
+				"$ref": "#/components/schemas/UserRestructedDBObjectType"
+			},
+			"Pick_UserRestructedDBObjectType.Exclude_keyofUserRestructedDBObjectType.password-or-createdAt-or-updatedAt__": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"points": {
+						"type": "number",
+						"format": "double"
+					},
+					"image": {
+						"type": "string"
+					},
+					"grade": {
+						"$ref": "#/components/schemas/GradeRestructedDBObjectType"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"email",
+					"type",
+					"points",
+					"grade"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_UserRestructedDBObjectType.password-or-createdAt-or-updatedAt_": {
+				"$ref": "#/components/schemas/Pick_UserRestructedDBObjectType.Exclude_keyofUserRestructedDBObjectType.password-or-createdAt-or-updatedAt__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"PostLoginResponseSuccessObjectType": {
+				"properties": {
+					"accessToken": {
+						"type": "string"
+					},
+					"user": {
+						"$ref": "#/components/schemas/Omit_UserRestructedDBObjectType.password-or-createdAt-or-updatedAt_"
+					}
+				},
+				"required": [
+					"accessToken",
+					"user"
+				],
+				"type": "object",
+				"description": "Post Request에 성공해서 로그인 정보를 줄 때, json 구조\n```json\n{\n  user:{\n    id: Cuid;\n    name: string;\n    email: string;\n    type: string;\n    points: number;\n    grade: {\n      id: string;\n      name: string;\n      rate: number;\n      minAmount: number;\n    };\n    image: string;\n  }\n  accessToken: string;\n}\n```"
+			},
+			"PostLoginRequestBodyObjectType": {
+				"properties": {
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"password",
+					"email"
+				],
+				"type": "object",
+				"description": "Post Request를 할 때, 클라이언트가 주는 정보 구조"
+			},
+			"PostGetAccessWithRefreshSuccessObjectTYpe": {
+				"properties": {
+					"accessToken": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"accessToken"
+				],
+				"type": "object"
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "Codi-it API",
+		"version": "1.0.0",
+		"description": "backend Codi-it API Server",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {
+			"name": "Solomon-Psk153"
+		}
+	},
+	"paths": {
+		"/users": {
+			"post": {
+				"operationId": "Register",
+				"responses": {
+					"201": {
+						"description": "register success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PostRegisterSuccessObjectType"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": "CUID",
+											"name": "김유저",
+											"email": "email@example.com",
+											"password": "$2b$10$abc...",
+											"type": "BUYER",
+											"points": 999,
+											"createdAt": "2025-05-29T06:00:41.976Z",
+											"updatedAt": "2025-05-29T06:00:41.976Z",
+											"grade": {
+												"name": "green",
+												"id": "grade_green",
+												"rate": 5,
+												"minAmount": 1000000
+											},
+											"image": "https://sprint-be-project.s3.ap-northeast-2.amazonaws.com/codiit/1749477485230-user_default.png"
+										}
+									}
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "ConFlict",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseObjectType"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 409,
+											"message": "이미 존재하는 유저입니다.",
+											"error": "ConFlict"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PostRegisterRequestObjectType"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/me": {
+			"get": {
+				"operationId": "FindMyInfo",
+				"responses": {
+					"200": {
+						"description": "find my info Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PostFindUserInfoSuccessObjectType"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": "CUID",
+											"name": "김유저",
+											"email": "email@example.com",
+											"password": "$2b$10$abc...",
+											"type": "BUYER",
+											"points": 999,
+											"createdAt": "2025-05-29T06:00:41.976Z",
+											"updatedAt": "2025-05-29T06:00:41.976Z",
+											"grade": {
+												"name": "green",
+												"id": "grade_green",
+												"rate": 5,
+												"minAmount": 1000000
+											},
+											"image": "https://sprint-be-project.s3.ap-northeast-2.amazonaws.com/codiit/1749477485230-user_default.png"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "NotFound",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseObjectType"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 404,
+											"message": "유저를 찾을 수 없습니다.",
+											"error": "NotFound"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [
+					{
+						"access": [
+							"SELLER",
+							"BUYER"
+						]
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"201": {
+						"description": "login success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PostLoginResponseSuccessObjectType"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"user": {
+												"id": "CUID",
+												"name": "김유저",
+												"email": "email@example.com",
+												"type": "BUYER",
+												"points": 999,
+												"grade": {
+													"name": "green",
+													"id": "grade_green",
+													"rate": 5,
+													"minAmount": 1000000
+												},
+												"image": "https://sprint-be-project.s3.ap-northeast-2.amazonaws.com/codiit/1749477485230-user_default.png"
+											},
+											"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseObjectType"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 400,
+											"message": "잘못된 요청입니다.",
+											"error": "Bad Request"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseObjectType"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 401,
+											"message": "이메일 또는 비밀번호가 올바르지 않습니다.",
+											"error": "Unauthorized"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseObjectType"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 404,
+											"message": "요청한 리소스를 찾을 수 없습니다.",
+											"error": "Not Found"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PostLoginRequestBodyObjectType"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/refresh": {
+			"post": {
+				"operationId": "GetAccessTokenWithRefreshToken",
+				"responses": {
+					"200": {
+						"description": "accessToken regen Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PostGetAccessWithRefreshSuccessObjectTYpe"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseObjectType"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 400,
+											"message": "잘못된 요청입니다.",
+											"error": "Bad Request"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponseObjectType"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"status": 401,
+											"message": "이메일 또는 비밀번호가 올바르지 않습니다.",
+											"error": "Unauthorized"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [
+					{
+						"refresh": [
+							"SELLER",
+							"BUYER"
+						]
+					}
+				],
+				"parameters": []
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

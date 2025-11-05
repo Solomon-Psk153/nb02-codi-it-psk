@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "🛍️ 판매자와 구매자를 위한 패션 커머스의 모든 것! 상품 등록부터 실시간 알림, 판매 분석까지 한 번에 관리해보세요. 구매자와 판매자를 위한 맞춤형 기능을 제공하며, 안정적인 인증 시스템과 다양한 필터링∙정렬 기능, 그리고 상세한 대시보드까지 지원하는 스마트한 쇼핑몰 운영 솔루션입니다. 지금 바로 더 편리하고 똑똑한 패션 커머스를 시작해보세요. 👗🧾",
   "scripts": {
-    "dev": "nodemon -r tsconfig-paths/register --watch . --exec ts-node src/bin/www.bin.ts",
+    "dev": "cross-env NODE_ENV=development nodemon -r tsconfig-paths/register --watch . --exec ts-node src/bin/www.bin.ts",
+    "prod": "cross-env NODE_ENV=production ts-node -r tsconfig-paths/register src/bin/www.bin.ts",
     "create:db": "ts-node -r tsconfig-paths/register src/bin/createDB4Migration.bin.ts",
     "seed:make": "node -r ts-node/register -r tsconfig-paths/register ./node_modules/.bin/knex seed:make --knexfile ./knex/config/knexfile.ts",
     "seed:all": "node -r ts-node/register -r tsconfig-paths/register ./node_modules/.bin/knex seed:run --specific=*.seed.ts --knexfile ./knex/config/knexfile.ts",
@@ -17,7 +18,9 @@
     "tsoa:sr": "tsoa spec-and-routes --config tsoa.json",
     "tsoa:r": "tsoa routes --config tsoa.json",
     "tsoa:s": "tsoa spec --config tsoa.json",
-    "ln:env4test": "ln -s envs/.env test/"
+    "test": "cross-env NODE_ENV=test jest --runInBand",
+    "test:parallel": "cross-env NODE_ENV=test jest",
+    "ln:envtest": "ln -sv $(realpath envs/.env) test/.env"
   },
   "repository": {
     "type": "git",
@@ -34,7 +37,9 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "@tsoa/runtime": "^6.6.0",
     "awilix": "^12.0.5",
-    "axios": "^1.12.2",
+    "axios": "^1.13.1",
+    "axios-cookiejar-support": "^6.0.4",
+    "axios-mock-adapter": "^2.1.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -56,6 +61,8 @@
     "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
     "socket.io": "^4.8.1",
+    "swagger-ui-express": "^5.0.1",
+    "tough-cookie": "^5.1.2",
     "tsconfig-paths": "^4.2.0",
     "tslib": "^2.8.1",
     "tsoa": "^6.6.0",
@@ -77,7 +84,13 @@
     "@types/passport": "^1.0.17",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
+    "@types/supertest": "^6.0.3",
+    "@types/swagger-ui-express": "^4.1.8",
+    "cross-env": "^10.1.0",
+    "jest": "^30.2.0",
     "nodemon": "^3.1.10",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   }

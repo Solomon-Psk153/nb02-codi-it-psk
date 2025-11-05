@@ -1,6 +1,5 @@
-import { z } from "zod";
 import { GradeDBObjectType, UserDBObjectType } from "./knex.type";
-import { userRegisterSchema } from "@_validators/requests/user.validator";
+import { RequestUserConfigType } from "./config.type";
 
 /**
  * ```json
@@ -82,4 +81,15 @@ export type GradeRestructedDBObjectType = Omit<GradeDBObjectType, "min_amount"> 
  *   type: "SELLER" | "BUYER";
  * }
  */
-export type PostUserRegisterRequestObjectType = z.infer<typeof userRegisterSchema>
+// export type PostRegisterRequestObjectType = z.infer<typeof userRegisterSchema>;
+export type PostRegisterRequestObjectType = {
+    name: string;
+    email: string;
+    password: string;
+    type: "SELLER" | "BUYER";
+}
+export type PostFindUserInfoParamType = RequestUserConfigType;
+
+export type PostRegisterSuccessObjectType = UserRestructedDBObjectType;
+
+export type PostFindUserInfoSuccessObjectType = UserRestructedDBObjectType;

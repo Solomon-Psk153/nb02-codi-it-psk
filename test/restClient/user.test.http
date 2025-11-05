@@ -19,3 +19,8 @@ Content-Type: application/json; charset=UTF-8
   "password": "asdfasdf",
   "type":"BUYER"
 }
+
+### findMyInfo
+GET http://{{$dotenv HOST_URL}}:{{$dotenv PORT}}/api/users/me
+Content-Type: application/json; charset=UTF-8
+Authorization: Bearer {{$dotenv ACCESS_TOKEN_TEST}}
